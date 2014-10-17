@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Add A College{% endblock %}
+{% block content %}
+<div class="container spacer center">
+	<h1>Add College Information</h1><br><br>
+	<h3 class="error">{{error}}</h3>
+	<br>
+	<form action="/add" method="POST">
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-3">Full Name</div>
+			<div class="col-lg-3">
+				<input class="form-control" name="name" placeholder='Jeremy Park'>
+			</div>
+		</div><br>
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-3">College Name</div>
+			<div class="col-lg-3">
+				<input class="form-control" name="college_name" placeholder='Rugters University'>
+			</div>
+		</div><br>
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-3">Location</div>
+			<div class="col-lg-3">
+				<input class="form-control" name="location" placeholder='New Brunswick, New Jersey'>
+			</div>
+		</div><br>
+		<div class="row">
+			<div class="col-lg-4"></div>
+			<div class="col-lg-4">
+				<button type="submit" class="btn btn-lg btn-primary">Submit</button>
+			</div>
+			<div class="col-lg-4"></div>
+		</div>
+	</form>
+</div>
+{% endblock %}

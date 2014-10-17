@@ -12,3 +12,9 @@
 .center{
 	text-align: center;
 }
+.spacer{
+	margin-top: 14%;
+}
+.error{
+	color: #c0392b;
+}

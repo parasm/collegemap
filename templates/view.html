@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Add A College{% endblock %}
+{% block content %}
+<div class="container spacer center">
+	<h1>View where other people are going</h1>
+	{% for person in people %}
+	<div class="row">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4 alert alert-dismissable alert-info">
+			<h2>Name: {{person['name']}}</h2>
+		</div>
+		<div class="col-lg-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4 alert alert-dismissable alert-info">
+			<h2>College: {{person['college_name']}}</h2>
+		</div>
+		<div class="col-lg-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4 alert alert-dismissable alert-info">
+			<h2>Location: {{person['location']}}</h2>
+		</div>
+		<div class="col-lg-4"></div>
+	</div>
+	<hr>
+	{% endfor %}
+</div>
+{% endblock %}
