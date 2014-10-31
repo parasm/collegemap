@@ -10,8 +10,6 @@ client = MongoClient('mongodb://admin:kobenevermisses@linus.mongohq.com:10083/co
 db = client.get_default_database()
 colleges = db.colleges
 
-app = Flask(__name__)
-
 @app.route('/')
 def hello():
 	return render_template("index.html")

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Add A College{% endblock %}
 {% block content %}
+<script src="/static/js/typeahead.bundle.js"></script>
 <div class="container spacer center">
 	<h1>Add College Information</h1><br><br>
 	<h3 class="error">{{error}}</h3>
@@ -16,15 +17,16 @@
 		<div class="row">
 			<div class="col-lg-2"></div>
 			<div class="col-lg-3">College Name</div>
-			<div class="col-lg-3">
-				<input class="form-control" name="college_name" placeholder='Rugters University'>
+			<div class="col-lg-3" id='the-basics'>
+				<!-- <input class="form-control" name="college_name" placeholder='Rugters University'> -->
+				<input type="text" placeholder="College Name" data-toggle="tooltip" data-placement="right" data-original-title="Enter or choose your college from the dropdown" type="text" class="typeahead form-control" autocomplete="off" id="class_name" name="class_name" autofocus="autofocus">
 			</div>
 		</div><br>
 		<div class="row">
 			<div class="col-lg-2"></div>
 			<div class="col-lg-3">Location</div>
-			<div class="col-lg-3">
-				<input class="form-control" name="location" placeholder='New Brunswick, New Jersey'>
+			<div class="col-lg-3" id='what-am-doin'>
+				<input class="typeahead form-control" name="location" placeholder='New Brunswick, New Jersey'>
 			</div>
 		</div><br>
 		<div class="row">
@@ -36,4 +38,53 @@
 		</div>
 	</form>
 </div>
+<script type="text/javascript">
+	var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substrRegex;
+ 
+    // an array that will be populated with substring matches
+    matches = [];
+ 
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+ 
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        // the typeahead jQuery plugin expects suggestions to a
+        // JavaScript object, refer to typeahead docs for more info
+        matches.push({ value: str });
+      }
+    });
+ 
+    cb(matches);
+  };
+};
+var states = ["Adelphi University","The University of Akron","The University of Alabama","Albany College of Pharmacy","Albright College","Allegheny College","American University","Amherst College","Antioch College","Arcadia University","Arizona State University","The University of Arizona","Asbury University","Babson College","Ball State University","Bard College","Barnard College","Barry University","Baruch College of the CUNY","Bates College","Baylor University","Becker College","Bennington College","Bentley University","Bergen Community College","Berklee College of Music","Binghamton University","Biola University","Boston College","Boston University","Bowdoin College","Brandeis University","University of British Columbia","Brooklyn College of the CUNY","Brown University","Bryn Mawr College","Bucknell University","Buffalo State College of SUNY","Butler University","Caldwell University","California Institute of Technology","California Institute of the Arts","California State Polytechnic University, Pomona","California Polytechnic State University, San Luis Obispo","University of California, Berkeley","University of California", "Davis","University of California, Irvine","University of California, Los Angeles","University of California, San Diego","University of California, Santa Barbara","University of California, Santa Cruz","Calvin College","Carleton College","Carnegie Mellon University","Carthage College","Case Western Reserve University","The Catholic University of America","Cazenovia College","Champlain College","University of Chicago","Christopher Newport University","Clark University","Clemson University","Cleveland Institute of Music","Colby College","Colgate University","University of Colorado at Boulder","Columbia University","Concordia University - Montreal","Connecticut College","University of Connecticut","The Cooper Union for the Advancement of Science & Art","Cornell University","Creighton University","CUNY-Macaulay Honors College","Daniel Webster College","Dartmouth College","Davidson College","University of Delaware","University of Denver","DePaul University","DePauw University","DeSales University","Dickinson College","Dominican College","Drew University","Drexel University","Duke University","Duquesne University","Eastman School of Music of the U of Rochester","Elon University","Embry-Riddle Aeronautical University","Embry-Riddle Aeronautical University","Emerson College","Emmanuel College","Emory University","Eugene Lang College The New School for Liberal Arts","Fairfield University","Fairleigh Dickinson University","Fairleigh Dickinson University, Madison","Felician College","Florida Atlantic University","Florida Institute of Technology","Florida State University","University of Florida","Fordham University","Franklin and Marshall College","Franklin W. Olin College of Engineering","Furman University","George Mason University","The George Washington University","Georgetown College","Georgetown University","Georgia Institute of Technology","Gordon College","Goucher College","Grinnell College","Hamilton College - NY","Hampshire College","University of Hartford","Harvard University","Harvey Mudd College","Haverford College","High Point University","Hillsdale College","Hobart and William Smith Colleges","Hofstra University","College of the Holy Cross","University of Houston","Howard University","Hunter College of the CUNY","University of Illinois at Urbana-Champaign","Indiana University at Bloomington","Indiana University South Bend","Iona College","The University of Iowa","Ithaca College","James Madison University","Jewish Theological Seminary of America","John Jay College of Criminal Justice of the CUNY","Johns Hopkins University","Johnson & Wales University (Providence)","Kansas State University","Kean University","Kent State University","Kenyon College","King's College","The King's College","Lafayette College","Le Moyne College","Lehigh University","Long Island University, Brooklyn","Lock Haven University of Pennsylvania","Louisiana State University","Loyola Marymount University","Loyola University Chicago","Loyola University Maryland","Loyola University New Orleans","Macalester College","University of Maine","Manhattan College","Manhattan School of Music","Mannes College of Music","Marist College","Marquette University","University of Mary Washington","Maryland Institute College of Art","University of Maryland University College","University of Maryland, Baltimore County","University of Maryland, College Park","Marymount Manhattan College","Marywood University","Massachusetts College of Art and Design","MCPHS - Massachusetts College of Pharmacy & Health Sciences","Massachusetts Institute of Technology","University of Massachusetts, Amherst","University of Massachusetts, Boston","McGill University","Messiah College","Methodist University","University of Miami","Michigan State University","University of Michigan","Middlebury College","University of Minnesota, Twin Cities","University of Missouri, Kansas City","Monmouth University","Montclair State University","Mount Holyoke College","Mount Saint Mary College","College of Mount Saint Vincent","Muhlenberg College","Nazareth College","NCAA Eligibility Center","University of Nevada, Las Vegas","New College of Florida","New England College","New England Conservatory of Music","University of New England","University of New Haven","New Jersey Institute of Technology","The College of New Jersey","New York Institute of Technology - Manhattan","New York Institute of Technology - Old Westbury","New York University","The University of North Carolina at Chapel Hill","University of North Carolina at Charlotte","University of North Carolina at Greensboro","University of North Carolina at Wilmington","University of North Carolina School of the Arts","North Carolina State University","Northeastern University","Northwestern University","University of Notre Dame","Nova Southeastern University","Oberlin College","Occidental College","Ohio University","Ohio Wesleyan University","Ontario College of Art & Design (OCAD)","Pace University, New York City","University of the Pacific","Parsons The New School for Design","Pennsylvania State University, Altoona","Pennsylvania State University, Schreyer Honors College","Pennsylvania State University, University Park","University of Pennsylvania","Pepperdine University","Philadelphia University","University of Pittsburgh","Point Park University","Polytechnic Institute of NYU","Pomona College","Pratt Institute","Princeton University","Providence College","Purchase College State University of New York","Purdue University","Queen's University","Quinnipiac University","Ramapo College of New Jersey","Rensselaer Polytechnic Institute","Rhode Island School of Design","University of Rhode Island","Rice University","Richard Stockton College of New Jersey","University of Richmond","Rider University","Ringling College of Art and Design","Robert Morris University","Rochester Institute of Technology","University of Rochester","Roger Williams University","Rose-Hulman Institute of Technology","Rowan University","Rutgers University-New Brunswick","Rutgers, The State University of New Jersey at Camden","Rutgers, The State University of New Jersey at Newark","Sacred Heart University","Saint Joseph's University","Saint Peter's University","The College of Saint Rose","Salisbury University","University of San Diego","University of San Francisco","Santa Clara University","Sarah Lawrence College","Savannah College of Art and Design","School of the Art Institute of Chicago","School of Visual Arts","University of the Sciences in Philadelphia","The University of Scranton","Seton Hall University","Siena College","Simmons College","Skidmore College","Smith College","University of South Carolina","University of South Florida, Tampa","University of Southern California","Springfield College","St. Bonaventure University","St. John's University - Queens Campus","St. Lawrence University","St. Olaf College","Stanford University","State University of New York at Albany","State University of New York at New Paltz","Stevens Institute of Technology","Stonehill College","Stony Brook University","SUNY College at Geneseo","SUNY College at Potsdam","SUNY Fredonia","Susquehanna University","Swarthmore College","Syracuse University","Temple University","Texas A&M University","Texas Christian University","The University of Texas, Austin","The Ohio State University","Towson University","Trinity College","Trinity University","Tufts University","Tulane University","Union College","United States Coast Guard Academy","United States Military Academy","United States Naval Academy","University at Buffalo The State University of New York","The University of the Arts","Ursinus College","University of Utah","Vanderbilt University","Vassar College","University of Vermont","Villanova University","Virginia Commonwealth University","Virginia Polytechnic Institute and State University","Virginia Wesleyan College","University of Virginia","Wagner College","Wake Forest University","Washington and Jefferson College","Washington College","Washington University in St. Louis","University of Washington","Wayne State University","Webb Institute","Wellesley College","Wentworth Institute of Technology","Wesleyan University","West Virginia University","Wheaton College IL","Wheaton College MA","Whitman College","Whittier College","Widener University","College of William and Mary","William Paterson University of New Jersey","Williams College","University of Wisconsin, Madison","University of Wisconsin, Milwaukee","The College of Wooster","Worcester Polytechnic Institute","Yale University","York College of Pennsylvania"];
+ var cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Philadelphia', 'Phoenix', 'Indianapolis', 'Jacksonville', 'Columbus', 'Charlotte', 'Detroit', 'Memphis', 'Seattle', 'Denver', 'Washington', 'Boston', 'Baltimore', 'Oklahoma City', 'Louisville', 'Portland', 'Las Vegas', 'Milwaukee', 'Albuquerque', 'Kansas City', 'Virginia Beach', 'Atlanta', 'Omaha', 'Minneapolis', 'Wichita', 'New Orleans', 'Honolulu', 'Anchorage', 'Newark', 'Boise', 'Birmingham', 'Des Moines', 'Little Rock', 'Salt Lake City', 'Providence', 'Jackson', 'Sioux Falls', 'Bridgeport', 'Columbia', 'Fargo', 'Manchester', 'Billings', 'San Juan']
+
+$('#what-am-doin .typeahead').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 1
+},
+{
+  name: 'cities',
+  displayKey: 'value',
+  source: substringMatcher(cities)
+});
+$('#the-basics .typeahead').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 1
+},
+{
+  name: 'states',
+  displayKey: 'value',
+  source: substringMatcher(states)
+});
+
+</script>
 {% endblock %}
