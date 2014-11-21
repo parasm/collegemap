@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect
 import jinja2
 from pymongo import *
 import os
+from requests import *
+import json
 
 app = Flask(__name__)
 
@@ -32,6 +34,16 @@ def add():
 def view():
 	all_people = colleges.find({})
 	return render_template("view.html",people=all_people)
+@app.route('/draw')
+def draw():
+	all_people = colleges.find({})
+	r = get("https://maps.googleapis.com/maps/api/geocode/json?address=96+Davidson+Rd,+Piscataway+Township,+NJ&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk")
+	data = json.loads(r.text)
+	# for x in data['results']:
+	# 	print x
+	lat = data['results'][0]['geometry']['location']['lat']
+	lon = data['results'][0]['geometry']['location']['lng']
+	return render_template('draw.html',college_name=all_people[0]['college_name'],lat=lat,lon=lon)
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 8000))
 	app.run(host='0.0.0.0', port=port,debug=True)

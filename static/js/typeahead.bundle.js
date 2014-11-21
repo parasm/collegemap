@@ -1264,7 +1264,7 @@
         function getDisplayFn(display) {
             display = display || "value";
             return _.isFunction(display) ? display : displayFn;
-            function displayFn(obj) {
+            `function displayFn(obj) {
                 return obj[display];
             }
         }
