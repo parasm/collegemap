@@ -2,4 +2,4 @@ Flask==0.9
 Jinja2==2.6
 gunicorn==0.17.2
 pymongo==2.7.2
-requests==1.5.6
+requests==1.2.2
