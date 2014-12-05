@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect
 import jinja2
 from pymongo import *
 import os
-from requests import *
+import requests
 import json
 
 app = Flask(__name__)
@@ -12,6 +12,8 @@ client = MongoClient('mongodb://admin:kobenevermisses@linus.mongohq.com:10083/co
 db = client.get_default_database()
 colleges = db.colleges
 
+def no_prevent_spamming():
+	pass
 @app.route('/')
 def hello():
 	return render_template("index.html")
@@ -27,23 +29,27 @@ def add():
 			return render_template('add.html',error="Cannot leave college name blank")
 		if not(location):
 			return render_template('add.html',error="Cannot leave location blank")
-		colleges.insert({'name':full_name,'college_name':college_name,'location':location})
+		colleges.insert({'name':full_name.strip(),'college_name':college_name.strip(),'location':location.strip()})
 		return redirect('/view')
 	return render_template("add.html")
-@app.route('/view', methods=['GET', 'POST'])
+@app.route('/draw', methods=['GET', 'POST'])
 def view():
 	all_people = colleges.find({})
 	return render_template("view.html",people=all_people)
-@app.route('/draw')
+@app.route('/view')
 def draw():
 	all_people = colleges.find({})
-	r = get("https://maps.googleapis.com/maps/api/geocode/json?address=96+Davidson+Rd,+Piscataway+Township,+NJ&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk")
-	data = json.loads(r.text)
-	# for x in data['results']:
-	# 	print x
-	lat = data['results'][0]['geometry']['location']['lat']
-	lon = data['results'][0]['geometry']['location']['lng']
-	return render_template('draw.html',college_name=all_people[0]['college_name'],lat=lat,lon=lon)
+	raw_data = {}
+	for loc in all_people:
+		raw_location = loc['location'].replace(' ','+')
+		r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk" % raw_location)
+		data = json.loads(r.text)
+		lat = data['results'][0]['geometry']['location']['lat']
+		lon = data['results'][0]['geometry']['location']['lng']
+		raw_data[loc['college_name']] = [lat,lon]
+	return render_template('draw.html',data=json.dumps(raw_data),count=len(raw_data))
+
+
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 8000))
 	app.run(host='0.0.0.0', port=port,debug=True)

@@ -6,14 +6,19 @@
   <div id="map" style="width: 100%; height: 100%;"></div>
 
   <script type="text/javascript">
-    var locations = [
-      ['Rutgers', 40.4867,-74.4444, 4],
-      ['NYU', 40.7127, -74.0059, 5]
-    ];
+    var raw_data = "{{data}}"
+    for(i=0;i<{{count}};i++){
+      raw_data = raw_data.replace('&#34;','"').replace('&#34;','"')
+    }
+    data = jQuery.parseJSON(raw_data)
+    var locations = []
+    for (college in data){
+      locations.push([college,data[college][0],data[college][1],5]);
+    }
 
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 10,
-      center: new google.maps.LatLng(40.4867,-74.4444),
+      zoom: 5,
+      center: new google.maps.LatLng(38.5111,-96.8005),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
