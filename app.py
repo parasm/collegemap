@@ -12,8 +12,6 @@ client = MongoClient('mongodb://admin:kobenevermisses@linus.mongohq.com:10083/co
 db = client.get_default_database()
 colleges = db.colleges
 
-def no_prevent_spamming():
-	pass
 @app.route('/')
 def hello():
 	return render_template("index.html")
@@ -29,7 +27,14 @@ def add():
 			return render_template('add.html',error="Cannot leave college name blank")
 		if not(location):
 			return render_template('add.html',error="Cannot leave location blank")
-		colleges.insert({'name':full_name.strip(),'college_name':college_name.strip(),'location':location.strip()})
+		raw_location = location.replace(' ','+')
+		r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk" % raw_location)
+		data = json.loads(r.text)
+		print 'paras' + location
+		print data
+		lat = data['results'][0]['geometry']['location']['lat']
+		lon = data['results'][0]['geometry']['location']['lng']
+		colleges.insert({'name':full_name.strip(),'college_name':college_name.strip(),'location':location.strip(),'cords':[lat,lon]})
 		return redirect('/view')
 	return render_template("add.html")
 @app.route('/draw', methods=['GET', 'POST'])
@@ -40,13 +45,15 @@ def view():
 def draw():
 	all_people = colleges.find({})
 	raw_data = {}
-	for loc in all_people:
-		raw_location = loc['location'].replace(' ','+')
-		r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk" % raw_location)
-		data = json.loads(r.text)
-		lat = data['results'][0]['geometry']['location']['lat']
-		lon = data['results'][0]['geometry']['location']['lng']
-		raw_data[loc['college_name']] = [lat,lon]
+	for person in all_people:
+		raw_data[person['college_name']] = person['cords']
+	# for loc in all_people:
+	# 	raw_location = loc['location'].replace(' ','+')
+	# 	r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk" % raw_location)
+	# 	data = json.loads(r.text)
+	# 	lat = data['results'][0]['geometry']['location']['lat']
+	# 	lon = data['results'][0]['geometry']['location']['lng']
+	# 	raw_data[loc['college_name']] = [lat,lon]
 	return render_template('draw.html',data=json.dumps(raw_data),count=len(raw_data))
 
 
