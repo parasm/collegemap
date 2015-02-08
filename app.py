@@ -4,6 +4,7 @@ from pymongo import *
 import os
 import requests
 import json
+import facebook
 
 app = Flask(__name__)
 
@@ -47,13 +48,6 @@ def draw():
 	raw_data = {}
 	for person in all_people:
 		raw_data[person['college_name']] = person['cords']
-	# for loc in all_people:
-	# 	raw_location = loc['location'].replace(' ','+')
-	# 	r = requests.get("https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=AIzaSyCd0-ydQhPpfKbjtIud0xUuoPw6kjbfvyk" % raw_location)
-	# 	data = json.loads(r.text)
-	# 	lat = data['results'][0]['geometry']['location']['lat']
-	# 	lon = data['results'][0]['geometry']['location']['lng']
-	# 	raw_data[loc['college_name']] = [lat,lon]
 	return render_template('draw.html',data=json.dumps(raw_data),count=len(raw_data))
 
 
